@@ -28,6 +28,7 @@ class CommentBox extends React.Component {
   handleCommentSubmit(comment) {
     const comments = this.state.data;
     const newComments = comments.concat([comment]);
+    comment.id = Date.now();
     this.setState({data: newComments});
     request
       .post(this.props.url)
@@ -61,7 +62,7 @@ class CommentList extends React.Component {
   render() {
     const commentNodes = this.props.data.map((comment) => {
       return (
-        <Comment author={comment.author}>
+        <Comment author={comment.author} key={comment.id}>
           {comment.text}
         </Comment>
       )
