@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "browserify app/src/js/index.js -t babelify -o app/dest/js/app.js",
+    "watch": "watchify app/src/js/index.js -t babelify -o app/dest/js/app.js"
   },
   "author": "",
   "license": "ISC",
