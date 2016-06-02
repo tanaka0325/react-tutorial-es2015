@@ -19,6 +19,7 @@
     "marked": "^0.3.5",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
+    "superagent": "^2.0.0",
     "watchify": "^3.7.0"
   },
   "dependencies": {
