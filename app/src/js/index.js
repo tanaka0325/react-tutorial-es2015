@@ -26,11 +26,15 @@ class CommentBox extends React.Component {
   }
 
   handleCommentSubmit(comment) {
+    const comments = this.state.data;
+    const newComments = comments.concat([comment]);
+    this.setState({data: newComments});
     request
       .post(this.props.url)
       .send(comment)
       .end((err, res) => {
         if (err) {
+          this.setState({data: comments})
           throw err
         }
         this.setState({data: res.body})
