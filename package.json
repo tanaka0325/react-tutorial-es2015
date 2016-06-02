@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server.js",
     "build": "browserify app/src/js/index.js -t babelify -o app/dest/js/app.js",
     "watch": "watchify app/src/js/index.js -t babelify -o app/dest/js/app.js"
   },
@@ -19,5 +20,9 @@
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4"
   }
 }
