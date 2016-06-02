@@ -1,18 +1,32 @@
 import React from 'react';
 import { render } from 'react-dom';
 import marked from 'marked';
-
-const data = [
-  {author: "Pete Hunt", text: "This is one comment from data."},
-  {author: "Jordan Walke", text: "This is *another* comment from data."},
-];
+import request from 'superagent';
 
 class CommentBox extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      data: []
+    }
+  }
+
+  componentDidMount() {
+    request
+      .get(this.props.url)
+      .end((err, res) => {
+        if (err) {
+          throw err
+        }
+        this.setState({data: res.body})
+      })
+  }
+
   render() {
     return (
       <div className="commentBox">
         <h1>Comments</h1>
-        <CommentList data={this.props.data} />
+        <CommentList data={this.state.data} />
         <CommentForm />
       </div>
     )
@@ -65,6 +79,6 @@ class Comment extends React.Component {
 };
 
 render(
-  <CommentBox data={data} />,
+  <CommentBox url="http://localhost:3000/api/comments" />,
   document.getElementById('content')
 );
