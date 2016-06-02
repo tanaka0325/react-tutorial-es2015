@@ -9,9 +9,11 @@ class CommentBox extends React.Component {
     this.state = {
       data: []
     }
+
+    this.loadCommentsFromServer = this.loadCommentsFromServer.bind(this);
   }
 
-  componentDidMount() {
+  loadCommentsFromServer() {
     request
       .get(this.props.url)
       .end((err, res) => {
@@ -20,6 +22,11 @@ class CommentBox extends React.Component {
         }
         this.setState({data: res.body})
       })
+  }
+
+  componentDidMount() {
+    this.loadCommentsFromServer();
+    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
   }
 
   render() {
@@ -79,6 +86,6 @@ class Comment extends React.Component {
 };
 
 render(
-  <CommentBox url="http://localhost:3000/api/comments" />,
+  <CommentBox url="http://localhost:3000/api/comments" pollInterval={2000} />,
   document.getElementById('content')
 );
