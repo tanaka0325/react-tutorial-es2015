@@ -2,12 +2,17 @@ import React from 'react';
 import { render } from 'react-dom';
 import marked from 'marked';
 
+const data = [
+  {author: "Pete Hunt", text: "This is one comment from data."},
+  {author: "Jordan Walke", text: "This is *another* comment from data."},
+];
+
 class CommentBox extends React.Component {
   render() {
     return (
       <div className="commentBox">
         <h1>Comments</h1>
-        <CommentList />
+        <CommentList data={this.props.data} />
         <CommentForm />
       </div>
     )
@@ -16,10 +21,16 @@ class CommentBox extends React.Component {
 
 class CommentList extends React.Component {
   render() {
+    const commentNodes = this.props.data.map((comment) => {
+      return (
+        <Comment author={comment.author}>
+          {comment.text}
+        </Comment>
+      )
+    })
     return (
       <div className="commentList">
-        <Comment author="Pete Hunt">This is one comment</Comment>
-        <Comment author="Jordan Walke">This is *another* comment</Comment>
+        {commentNodes}
       </div>
     )
   }
@@ -53,8 +64,7 @@ class Comment extends React.Component {
   }
 };
 
-
 render(
-  <CommentBox />,
+  <CommentBox data={data} />,
   document.getElementById('content')
 );
