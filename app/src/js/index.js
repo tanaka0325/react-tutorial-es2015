@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { render, findDOMNode } from 'react-dom';
 import marked from 'marked';
 import request from 'superagent';
 
@@ -11,11 +11,24 @@ class CommentBox extends React.Component {
     }
 
     this.loadCommentsFromServer = this.loadCommentsFromServer.bind(this);
+    this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
   }
 
   loadCommentsFromServer() {
     request
       .get(this.props.url)
+      .end((err, res) => {
+        if (err) {
+          throw err
+        }
+        this.setState({data: res.body})
+      })
+  }
+
+  handleCommentSubmit(comment) {
+    request
+      .post(this.props.url)
+      .send(comment)
       .end((err, res) => {
         if (err) {
           throw err
@@ -34,7 +47,7 @@ class CommentBox extends React.Component {
       <div className="commentBox">
         <h1>Comments</h1>
         <CommentList data={this.state.data} />
-        <CommentForm />
+        <CommentForm onCommentSubmit={this.handleCommentSubmit} />
       </div>
     )
   }
@@ -58,11 +71,33 @@ class CommentList extends React.Component {
 };
 
 class CommentForm extends React.Component {
+  constructor() {
+    super();
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const author = findDOMNode(this.refs.author).value.trim();
+    const text = findDOMNode(this.refs.text).value.trim();
+
+    if (!text || !author) {
+      return;
+    }
+
+    this.props.onCommentSubmit({author: author, text: text});
+    findDOMNode(this.refs.author).value = '';
+    findDOMNode(this.refs.text).value = '';
+    return;
+  }
+
   render() {
     return (
-      <div className="commentForm">
-        Hello, world! I am a CommentForm.
-      </div>
+      <form className="commentForm" onSubmit={this.handleSubmit}>
+        <input type="text" placeholder="Your name" ref="author" />
+        <input type="text" placeholder="Say something..." ref="text" />
+        <input type="submit" value="Post" />
+      </form>
     )
   }
 };
